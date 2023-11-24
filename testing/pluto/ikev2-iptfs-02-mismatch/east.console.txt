@@ -1,0 +1,26 @@
+/testing/guestbin/swan-prep
+east #
+ ipsec start
+Redirecting to: [initsystem]
+east #
+ ../../guestbin/wait-until-pluto-started
+east #
+ ipsec auto --add ipv4-psk-ikev2
+"ipv4-psk-ikev2": added IKEv2 connection
+east #
+ ipsec auto --status | grep iptfs
+"ipv4-psk-ikev2":   iptfs: no; dont_frag: no; pkt_size: 0; max-queue-size: 0 drop-time: 0 in-delay: 0 reorder-window: 0
+east #
+ ipsec whack --impair suppress-retransmits
+east #
+ echo "initdone"
+initdone
+east #
+ ../../guestbin/ipsec-kernel-state.sh
+east #
+ ../../guestbin/ipsec-kernel-policy.sh
+east #
+ grep IPTFS /tmp/pluto.log
+"ipv4-psk-ikev2" #2: policy does not allow IPTFS Mode, ignoring peer's request for IPTFS
+east #
+ 

@@ -1,0 +1,3 @@
+Simpe IKEv2 testcase for IPTFS with mismatched iptfs= setting
+
+The connection should establish without IPTFS in regular tunnel mode
