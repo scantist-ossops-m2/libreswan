@@ -296,6 +296,15 @@ struct whack_message {
 	uintmax_t priority;
 	uintmax_t tfc;
 	bool send_no_esp_tfc;
+
+	enum yn_options iptfs;
+	enum yn_options iptfs_dont_frag; /* XFRMA_IPTFS_DONT_FRAG */
+	uintmax_t iptfs_pkt_size; /* XFRMA_IPTFS_PKT_SIZE, 0 for PMTU */
+	uintmax_t iptfs_max_qsize; /* XFRMA_IPTFS_MAX_QSIZE */
+	uintmax_t iptfs_drop_time; /* XFRMA_IPTFS_DROP_TIME */
+	uintmax_t iptfs_in_delay; /* XFRMA_IPTFS_IN_DELAY */
+	uintmax_t iptfs_reord_win; /* XFRMA_IPTFS_REORD_WIN, u16 */
+
 	reqid_t sa_reqid;
 	int nflog_group;
 

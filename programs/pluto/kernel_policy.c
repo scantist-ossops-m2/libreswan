@@ -115,6 +115,7 @@ struct kernel_policy_encap {
 };
 
 static struct kernel_policy kernel_policy_from_spd(struct kernel_policy_encap policy,
+						   bool iptfs,
 						   const struct spd_route *spd,
 						   enum encap_mode mode,
 						   enum direction direction,
@@ -157,6 +158,7 @@ static struct kernel_policy kernel_policy_from_spd(struct kernel_policy_encap po
 		/* details */
 		.priority = spd_priority(spd),
 		.mode = mode,
+		.iptfs = iptfs,
 		.kind = SHUNT_KIND_IPSEC,
 		.shunt = SHUNT_IPSEC,
 		.where = where,
@@ -248,7 +250,7 @@ static struct kernel_policy kernel_policy_from_state(const struct child_sa *chil
 
 	setup_esp_nic_offload(&nic_offload, child->sa.st_connection, NULL);
 	enum encap_mode mode = (tunnel ? ENCAP_MODE_TUNNEL : ENCAP_MODE_TRANSPORT);
-	struct kernel_policy kernel_policy = kernel_policy_from_spd(policy,
+	struct kernel_policy kernel_policy = kernel_policy_from_spd(policy, child->sa.st_seen_and_use_iptfs,
 								    spd, mode, direction,
 								    &nic_offload,
 								    where);
@@ -281,8 +283,10 @@ bool add_sec_label_kernel_policy(const struct spd_route *spd,
 		.esp = (c->config->child_sa.encap_proto == ENCAP_PROTO_ESP),
 		.ah = (c->config->child_sa.encap_proto == ENCAP_PROTO_AH),
 	};
+	struct child_sa *child = child_sa_by_serialno(c->newest_ipsec_sa);
+
 	struct kernel_policy kernel_policy =
-		kernel_policy_from_spd(policy, spd, encap_mode, direction,
+		kernel_policy_from_spd(policy, child->sa.st_seen_and_use_iptfs, spd, encap_mode, direction,
 				       &nic_offload,
 				       where);
 	if (!kernel_ops_policy_add(KERNEL_POLICY_OP_ADD, direction,

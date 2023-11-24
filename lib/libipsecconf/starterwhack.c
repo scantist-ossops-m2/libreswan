@@ -697,6 +697,20 @@ int starter_whack_add_conn(struct starter_config *cfg,
 	msg.require_id_on_certificate = conn->options[KNCF_REQUIRE_ID_ON_CERTIFICATE]; /* yn_options */
 	msg.modecfgpull = conn->options[KNCF_MODECFGPULL]; /* yn_options */
 	msg.aggressive = conn->options[KNCF_AGGRESSIVE]; /* yn_options */
+
+	msg.iptfs = conn->options[KNCF_IPTFS]; /* yn_options */
+	msg.iptfs_dont_frag = conn->options[KNCF_IPTFS_DONT_FRAG]; /* yn_options */
+	if (conn->options_set[KNCF_IPTFS_PKT_SIZE])
+		msg.iptfs_pkt_size = conn->options[KNCF_IPTFS_PKT_SIZE];
+	if (conn->options_set[KNCF_IPTFS_MAX_QUEUE])
+		msg.iptfs_max_qsize = conn->options[KNCF_IPTFS_MAX_QUEUE];
+	if (conn->options_set[KNCF_IPTFS_IN_DELAY])
+		msg.iptfs_in_delay = conn->options[KNCF_IPTFS_IN_DELAY];
+	if (conn->options_set[KNCF_IPTFS_REORD_WIN])
+		msg.iptfs_in_delay = conn->options[KNCF_IPTFS_REORD_WIN];
+	if (conn->options_set[KNCF_IPTFS_DROP_TIME])
+		msg.iptfs_in_delay = conn->options[KNCF_IPTFS_DROP_TIME];
+
 	msg.decap_dscp = conn->options[KNCF_DECAP_DSCP]; /* yn_options */
 	msg.encap_dscp = conn->options[KNCF_ENCAP_DSCP]; /* yn_options */
 	msg.nopmtudisc = conn->options[KNCF_NOPMTUDISC]; /* yn_options */

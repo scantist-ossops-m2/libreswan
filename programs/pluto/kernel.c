@@ -1361,6 +1361,7 @@ static bool setup_half_kernel_state(struct state *st, enum direction direction)
 		.dst.route = route.dst.route,
 		.direction = direction,
 		.tunnel = (route.mode == ENCAP_MODE_TUNNEL),
+		.iptfs = st->st_seen_and_use_iptfs,
 		.sa_lifetime = c->config->sa_ipsec_max_lifetime,
 		.sa_max_soft_bytes = sa_ipsec_soft_bytes,
 		.sa_max_soft_packets = sa_ipsec_soft_packets,
@@ -1530,6 +1531,28 @@ static bool setup_half_kernel_state(struct state *st, enum direction direction)
 			ldbg(st->st_logger, "kernel: Enabling TFC at %ju bytes (up to PMTU)",
 			     c->config->child_sa.tfcpad);
 			said_next->tfcpad = c->config->child_sa.tfcpad;
+		}
+
+		/* IPTFS kernel options */
+		if (c->config->child_sa.iptfs && st->st_seen_and_use_iptfs) {
+			if (c->config->child_sa.iptfs_pkt_size != 0) {
+				ldbg(st->st_logger, "kernel: Enabling IPTFS with %ju byte packet size",
+					c->config->child_sa.iptfs_pkt_size);
+			} else {
+				ldbg(st->st_logger, "kernel: Enabling IPTFS with PMTU packet size");
+			}
+			said_next->iptfs = true;
+			said_next->iptfs_dont_frag = c->config->child_sa.iptfs_dont_frag;
+			said_next->iptfs_pkt_size = c->config->child_sa.iptfs_pkt_size;
+			said_next->iptfs_max_qsize = c->config->child_sa.iptfs_max_qsize;
+			said_next->iptfs_drop_time = c->config->child_sa.iptfs_drop_time;
+			said_next->iptfs_in_delay = c->config->child_sa.iptfs_in_delay;
+			said_next->iptfs_reord_win = c->config->child_sa.iptfs_reord_win;
+			ldbg(st->st_logger, "kernel: IPTFS with%s dont_frag set",
+				c->config->child_sa.iptfs_dont_frag ? "out" : "");
+			ldbg(st->st_logger, "kernel: IPTFS max_qsize=%ju, drop_time=%ju, in_delay=%ju, reord_win=%ju",
+				c->config->child_sa.iptfs_max_qsize, c->config->child_sa.iptfs_drop_time,
+				c->config->child_sa.iptfs_in_delay, c->config->child_sa.iptfs_reord_win);
 		}
 
 		if (c->config->decap_dscp) {
