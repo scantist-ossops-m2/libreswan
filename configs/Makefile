@@ -222,6 +222,7 @@ XMLSOURCES += d.ipsec.conf/compress.xml
 XMLSOURCES += d.ipsec.conf/metric.xml
 XMLSOURCES += d.ipsec.conf/mtu.xml
 XMLSOURCES += d.ipsec.conf/tfc.xml
+XMLSOURCES += d.ipsec.conf/iptfs.xml
 XMLSOURCES += d.ipsec.conf/nflog.xml
 XMLSOURCES += d.ipsec.conf/mark.xml
 XMLSOURCES += d.ipsec.conf/vti.xml
